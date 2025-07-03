@@ -1,0 +1,20 @@
+# R session files
+.RData
+.Rhistory
+.Ruserdata
+
+# R packages and logs
+.Rproj.user/
+.Rproj.user
+.Rprofile
+.Rapp.history
+
+# Cache and temporary files
+*.Rout
+*.Rout.save
+*.Rhistory
+
+# Ignore all Excel files
+*.xlsx
+*.xls
+
