@@ -5,7 +5,7 @@ library(data.table)
 library(multinma)
 
 # getwd()
-# setwd('X:\\HAR_WG\\WG\\UKSEA_VAXHUB\\Systematic_Review')
+# setwd('X:\\HAR_WG\\WG\\UKSEA_VAXHUB\\Systematic_Review_Dengue_Forecasting')
 
 ## Pitak's last sheet with rankings
 D <- fread("PME.csv")
