@@ -31,8 +31,11 @@ names(DR)[2] <- "method"
 
 DR
 
-rmv <- c("Hasan, 2024","Patra, 2024") #single arm
-DR <- DR[!Identifier %in% rmv]
+
+
+
+# rmv <- c("Hasan, 2024") #single arm
+# DR <- DR[!Identifier %in% rmv]
 DR[,summary(RMSE_log10)]
 DR[,err:=3 + RMSE_log10]
 
@@ -47,12 +50,14 @@ print(DM)
 
 plot(DM)
 
-
+# Take sometimes to run (e.g., 30 min)
 smkfit <- nma(DM,
               trt_effects = "random",
               prior_intercept = normal(scale = 100),
               prior_trt = normal(scale = 100),
-              prior_het = normal(scale = 5))
+              prior_het = normal(scale = 5),
+              iter = 4000 # Increase from default (often 2000) to 4000, 6000, or more
+              )
 
 
 ## relative effects
@@ -65,11 +70,11 @@ plot(smk_releff, ref_line = 0)
 #Adjust Rank only 1 to 10
 smk_rankprobs <- posterior_rank_probs(smkfit, lower_better = TRUE)
 smk_rankprobs 
-plot(smk_rankprobs)
+plot(smk_rankprobs) + xlim(1, 47)
 # ggsave("nma_rnkprb.pdf",w=10,h=10)
 
 
 smk_cumrankprobs <- posterior_rank_probs(smkfit, lower_better = TRUE, cumulative = TRUE)
 smk_cumrankprobs
-plot(smk_cumrankprobs)
+plot(smk_cumrankprobs) + xlim(1, 47)
 # ggsave("nma_crnkprb.pdf",w=10,h=10)
