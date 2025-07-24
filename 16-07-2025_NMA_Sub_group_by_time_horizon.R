@@ -1,8 +1,27 @@
 # make sub-group by time horizon (short,medium,long range)
 # Use Soyiri and Reidpath, 2013 as the ref.
 
-
+library(data.table)
+library(multinma)
+library(ggplot2)
+library(readr)
 library(dplyr)
+
+
+
+D <- fread("PME.csv")
+
+#creat RMSE_LOG10
+
+#RMSE{CHAR} -> RMSE{NUM}
+D[, RMSE := as.numeric(RMSE)]
+
+#Or remove the value 0 since it is a outlier
+D <- D[RMSE > 0 | RMSE < 0]
+
+#remove negative value (n=3) out before the put in log scale
+D <- D[RMSE >= 0]
+D[, RMSE_log10 := log10(RMSE)]
 
 unique(D$`Time Horizon (Months)`)
 
@@ -49,12 +68,6 @@ head(D_short_range)
 head(D_medium_range)
 head(D_long_range)
 
-
-
-
-
-
-
 (nmz <- names(D))
 (keep <- nmz[c(3,5,29)])
 
@@ -75,11 +88,14 @@ DM_short_range <- set_agd_arm( data= DR_short_range,
                    study = Identifier,
                    trt = method,
                    y=err,
-                   se=err/10
+                   se=err/10,
+                   trt_ref = "ARIMA"
                    ) 
+
 print(DM_short_range)
 
-plot(DM_short_range)
+plot(DM_short_range) +
+  labs(title = "Network Structure for Short-Range Studies")
 
 
 #setup D_medium_range df
@@ -97,12 +113,14 @@ DM_medium_range <- set_agd_arm( data= DR_medium_range,
                                study = Identifier,
                                trt = method,
                                y=err,
-                               se=err/10
+                               se=err/10,
+                               trt_ref = "ARIMA"
 ) 
 
 print(DM_medium_range)
 
-plot(DM_medium_range)
+plot(DM_medium_range)+
+  labs(title = "Network Structure for Medium-Range Studies")
 
 #setup D_long_range df
 DR_long_range <- D_long_range[,..keep]
@@ -119,67 +137,103 @@ DM_long_range <- set_agd_arm( data= DR_long_range,
                                 study = Identifier,
                                 trt = method,
                                 y=err,
-                                se=err/10
+                                se=err/10,
+                              trt_ref = "ARIMA"
 ) 
 
 print(DM_long_range)
 
-plot(DM_long_range)
+plot(DM_long_range)+
+  labs(title = "Network Structure for Long-Range Studies")
 
 
 #fit short range horizon
 
 fit_short_range <- nma(DM_short_range,
-              trt_effects = "fixed",
+              trt_effects = "random",
               prior_intercept = normal(scale = 100),
               prior_trt = normal(scale = 100),
               prior_het = normal(scale = 5),
               iter = 4000 # Increase from default (often 2000) to 4000, 6000, or more
 )
 
+saveRDS(fit_short_range, file = "Short_range_NMA.rds")
+
 print("--- Short range Effects Model Results  ---")
 print(relative_effects(fit_short_range,))
-plot(relative_effects(fit_short_range))
+plot(relative_effects(fit_short_range)) +
+  labs(title = "Short range Studies Relative Effects Ranks")
 
 print("--- Short range Effects Cumulative Ranks ---")
 print(posterior_rank_probs(fit_short_range), cumulative = TRUE)
-plot(posterior_rank_probs(fit_short_range, lower_better = TRUE, cumulative = TRUE)) + xlim(1, 10)
+plot(posterior_rank_probs(fit_short_range, lower_better = TRUE, cumulative = TRUE)) + xlim(1, 10)  +
+  labs(title = "Short range Studies Cumulative Ranks")
 
 
 #fit medium range horizon
 
 fit_medium_range <- nma(DM_medium_range,
-                       trt_effects = "fixed",
+                       trt_effects = "random",
                        prior_intercept = normal(scale = 100),
                        prior_trt = normal(scale = 100),
                        prior_het = normal(scale = 5),
                        iter = 4000 # Increase from default (often 2000) to 4000, 6000, or more
 )
 
+saveRDS(fit_medium_range, file = "Medium_range_NMA.rds")
+
 print("--- medium range Effects Model Results  ---")
 print(relative_effects(fit_medium_range,))
-plot(relative_effects(fit_medium_range))
+plot(relative_effects(fit_medium_range))+
+  labs(title = "Medium range Studies Relative Effects Ranks")
 
 print("--- medium range Effects Cumulative Ranks ---")
 print(posterior_rank_probs(fit_medium_range), cumulative = TRUE)
-plot(posterior_rank_probs(fit_medium_range, lower_better = TRUE, cumulative = TRUE)) + xlim(1, 31)
-
+plot(posterior_rank_probs(fit_medium_range, lower_better = TRUE, cumulative = TRUE)) + xlim(1, 31)  +
+  labs(title = "Medium range Studies Cumulative Ranks")
 
 #fit long range horizon
 
 fit_long_range <- nma(DM_long_range,
-                        trt_effects = "fixed",
+                        trt_effects = "random",
                         prior_intercept = normal(scale = 100),
                         prior_trt = normal(scale = 100),
                         prior_het = normal(scale = 5),
                         iter = 4000 # Increase from default (often 2000) to 4000, 6000, or more
 )
 
+saveRDS(fit_long_range, file = "Long_range_NMA.rds")
+
 print("--- long range Effects Model Results  ---")
 print(relative_effects(fit_long_range,))
-plot(relative_effects(fit_long_range))
+plot(relative_effects(fit_long_range))+
+  labs(title = "Long range Studies Relative Effects Ranks")
 
 print("--- long range Effects Cumulative Ranks ---")
 print(posterior_rank_probs(fit_long_range), cumulative = TRUE)
-plot(posterior_rank_probs(fit_long_range, lower_better = TRUE, cumulative = TRUE)) + xlim(1, 20)
+plot(posterior_rank_probs(fit_long_range, lower_better = TRUE, cumulative = TRUE)) + xlim(1, 20) +
+  labs(title = "Long range Studies Cumulative Ranks")
+
+
+
+
+
+
+
+
+# Find the common methods across DR_short_range, DR_medium_range, and DR_long_range
+# Get the unique methods from each data range
+methods_short_range <- unique(DR_short_range$method)
+methods_medium_range <- unique(DR_medium_range$method)
+methods_long_range <- unique(DR_long_range$method)
+
+# Find the intersection between the first two
+common_methods_1_2 <- intersect(methods_short_range, methods_medium_range)
+
+# Then find the intersection of that result with the third
+common_methods_all <- intersect(common_methods_1_2, methods_long_range)
+
+# Print the common methods
+print(common_methods_all)
+
 

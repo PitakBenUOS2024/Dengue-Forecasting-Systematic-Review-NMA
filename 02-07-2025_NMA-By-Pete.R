@@ -46,7 +46,7 @@ DM <- set_agd_arm( data= DR,
                    trt = method,
                    y=err,
                    se=err/10,
-                   trt_ref = "Naïve" # <<< THIS IS REFERENCE MODEL. Naïve beacause it's Most Basic Model
+                   trt_ref = "ARIMA" # <<< THIS IS REFERENCE MODEL. ARIMA beacause it's Most Basic Model
 )
 
 print(DM)
@@ -70,7 +70,8 @@ saveRDS(smkfit, file = "base_case_NMA.rds")
 ## relative effects
 smk_releff <- relative_effects(smkfit, all_contrasts = FALSE)
 smk_releff
-plot(smk_releff, ref_line = 0)
+plot(smk_releff, ref_line = 0)+
+  labs(title = "Base Case NMA Relative Effect")
 # ggsave("nma_releff.pdf",w=10,h=15)
 
 ## rank visualizations
@@ -83,7 +84,8 @@ plot(smk_releff, ref_line = 0)
 
 smk_cumrankprobs <- posterior_rank_probs(smkfit, lower_better = TRUE, cumulative = TRUE)
 smk_cumrankprobs
-plot(smk_cumrankprobs) + xlim(1, 47)#Adjust Rank
+plot(smk_cumrankprobs) + xlim(1, 47) +
+  labs(title = "Base Case NMA Cumulative Rank Probability")
 # ggsave("nma_crnkprb.pdf",w=10,h=10)
 
 
@@ -100,12 +102,13 @@ net_high_Q_studies <- set_agd_arm( data= my_data_no_l_n_m_study,
                    trt = method,
                    y=err,
                    se=err/10,
-                   trt_ref = "Naïve" # <<< THIS IS REFERENCE MODEL. Naïve beacause it's Most Basic Model
+                   trt_ref = "ARIMA" # <<< THIS IS REFERENCE MODEL. Naïve beacause it's Most Basic Model
 )
 
 print("--- Network excluding Low and Medium qulity studies ---")
 print(net_high_Q_studies)
 plot(net_high_Q_studies)
+
 
 fit_high_Q_studies <- nma(net_high_Q_studies,
                             trt_effects = "random",
@@ -122,11 +125,14 @@ saveRDS(fit_high_Q_studies, file = "high_quality_case_NMA.rds")
 # Compare results
 print("--- Results without Low and Medium qulity studies ---")
 print(relative_effects(fit_high_Q_studies))
-plot(relative_effects(fit_high_Q_studies))
+plot(relative_effects(fit_high_Q_studies), ref_line = 0)+
+  labs(title = "High quality studies NMA Relative Effect")
+
 
 print("--- SUCRA Ranks without Low and Medium qulity studies ---")
 print(posterior_rank_probs(fit_high_Q_studies, lower_better = TRUE, cumulative = TRUE))
-plot(posterior_rank_probs(fit_high_Q_studies, lower_better = TRUE, cumulative = TRUE)) + xlim(1, 39)
+plot(posterior_rank_probs(fit_high_Q_studies, lower_better = TRUE, cumulative = TRUE)) + xlim(1, 39)+
+  labs(title = "High quality studies NMA Cumulative Rank Probability")
 
 
 # --- 3.Fixed Effects Setup ---
@@ -143,8 +149,9 @@ saveRDS(fit_fixed, file = "fixed_effect_case_NMA.rds")
 
 
 print("--- Fixed Effects Model Results ---")
-print(relative_effects(fit_fixed,))
-plot(relative_effects(fit_fixed))
+print(relative_effects(fit_fixed))
+plot(relative_effects(fit_fixed), ref_line = 0)+
+  labs(title = "Fixed Effect studies NMA Relative Effect")
 
 # print("--- Fixed Effects SUCRA Ranks ---")
 # print(posterior_rank_probs(fit_fixed))
@@ -152,4 +159,5 @@ plot(relative_effects(fit_fixed))
 
 print("--- Fixed Effects Cumulative Ranks ---")
 print(posterior_rank_probs(fit_fixed), cumulative = TRUE)
-plot(posterior_rank_probs(fit_fixed, lower_better = TRUE, cumulative = TRUE)) + xlim(1, 47)
+plot(posterior_rank_probs(fit_fixed, lower_better = TRUE, cumulative = TRUE)) + xlim(1, 47)+
+  labs(title = "Fixed Effect studies NMA Cumulative Rank Probability")
