@@ -1,6 +1,7 @@
 library(data.table)
 library(multinma)
 
+setwd('/Users/pitakbenjarattanaporn/Documents/Projects/Systematic_Review_Dengue_Forecasting/data') #data folder on local machine
 
 ## Pitak's last sheet with rankings
 D <- fread("PME.csv")

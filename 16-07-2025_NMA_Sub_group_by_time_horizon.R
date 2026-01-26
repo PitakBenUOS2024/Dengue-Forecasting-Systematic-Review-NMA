@@ -7,7 +7,7 @@ library(ggplot2)
 library(readr)
 library(dplyr)
 
-
+setwd('/Users/pitakbenjarattanaporn/Documents/Projects/Systematic_Review_Dengue_Forecasting/data') #data folder on local machine
 
 D <- fread("PME.csv")
 

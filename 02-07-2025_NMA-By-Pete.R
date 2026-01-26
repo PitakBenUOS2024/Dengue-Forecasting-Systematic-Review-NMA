@@ -6,8 +6,14 @@ library(multinma)
 library(ggplot2)
 library(readr)
 
-# getwd()
+getwd()
+
+#On PC 
 # setwd('X:\\HAR_WG\\WG\\UKSEA_VAXHUB\\Systematic_Review_Dengue_Forecasting')
+
+#On Mac os
+# setwd('/Volumes/HAR_WG/WG/UKSEA_VAXHUB/Systematic_Review_Dengue_Forecasting')
+setwd('/Users/pitakbenjarattanaporn/Documents/Projects/Systematic_Review_Dengue_Forecasting/data') #data folder on local machine
 
 # --- 0. Set up some data ---
 
@@ -46,7 +52,7 @@ DM <- set_agd_arm( data= DR,
                    trt = method,
                    y=err,
                    se=err/10,
-                   trt_ref = "ARIMA" # <<< THIS IS REFERENCE MODEL. ARIMA beacause it's Most Basic Model
+                   trt_ref = "Naïve" # <<< THIS IS REFERENCE MODEL. ARIMA beacause it's Most Basic Model
 )
 
 print(DM)
@@ -86,7 +92,24 @@ smk_cumrankprobs <- posterior_rank_probs(smkfit, lower_better = TRUE, cumulative
 smk_cumrankprobs
 plot(smk_cumrankprobs) + xlim(1, 47) +
   labs(title = "Base Case NMA Cumulative Rank Probability")
-# ggsave("nma_crnkprb.pdf",w=10,h=10)
+# ggsave("nma_crnkprb.png",w=10,h=10)
+
+# Define the file name
+file_name <- "FigC1_NMA_crnkprb.tif"
+
+# Save the plot with PLOS-compliant settings
+ggsave(
+  filename = file_name, 
+  plot = smk_cumrankprobs, 
+  device = "tiff", 
+  dpi = 300,            # Required minimum resolution
+  width = 7.5,          # Standard width for a full-page width figure (inches)
+  height = 8,           # Adjust based on the number of models in your list
+  units = "in", 
+  compression = "lzw"   # Reduces file size without losing quality
+)
+
+message(paste("Figure saved to:", getwd(), "/", file_name))
 
 
 # Sensitivity Analysis 

@@ -2,6 +2,7 @@ library(data.table)
 library(multinma)
 library(ggplot2)
 
+setwd('/Users/pitakbenjarattanaporn/Documents/Projects/Systematic_Review_Dengue_Forecasting/data') #data folder on local machine
 
 ## Pitak's last sheet with rankings
 D <- fread("PME.csv")
@@ -12,6 +13,7 @@ D[,num:=.N,by=Identifier]
 D[,uniqueN(Identifier)]
 D[,range(num)]
 D[,unique(`Rank within study`)]
+
 
 ## =============== visualization
 
@@ -26,7 +28,34 @@ DM_Category <- set_agd_arm(
                    sample_size=num)
 
 print(DM_Category)
-plot(DM_Category, weight_nodes = TRUE) 
+
+# 1. Create the base plot
+p <- plot(DM_Category, weight_nodes = TRUE)
+
+# 2. Increase Text Size (Layer 3)
+p$layers[[3]]$aes_params$size <- 5
+
+# 3. Increase Node Size and Move Legend
+p <- p +
+  scale_size_continuous(range = c(8, 22)) +
+  theme(legend.position = "bottom",
+        legend.box = "vertical") +
+  scale_x_continuous(expand = expansion(mult = 0.2)) +
+  # --- ADD THIS LINE TO RENAME THE LEGEND ---
+  labs(size = "Total Sample Size") # 'size' refers to the node size aesthetic
+
+# 4. Print to check
+print(p)
+
+# Save the plot object 'p' to a file
+ggsave(
+  filename = "network_plot.png", 
+  plot = p, 
+  width = 9.4,       # Width of the image
+  height = 8,       # Height of the image
+  units = "in",     # Units for width/height
+  dpi = 300         # Resolution (300 is print quality)
+)
 
 ################[Warning take hours to run!!]######################
 
