@@ -1,3 +1,10 @@
+library(data.table)
+library(multinma)
+library(ggplot2)
+library(readr)
+library(dplyr)
+
+
 # setwd('X:\\HAR_WG\\WG\\UKSEA_VAXHUB\\Systematic_Review_Dengue_Forecasting')
 setwd('/Users/pitakbenjarattanaporn/Documents/Projects/Systematic_Review_Dengue_Forecasting/data') #data folder on local machine
 
@@ -19,18 +26,27 @@ plot(relative_effects(loaded_base_case), ref_line = 0)+
 
 Base_case_rank <- posterior_rank_probs(loaded_base_case, lower_better = TRUE, cumulative = TRUE, sucra = TRUE)
 print(Base_case_rank)
-plot(Base_case_rank) + xlim(1, 47) #+
+plot(Base_case_rank) + xlim(1, 47) #
   labs(title = "Base Case NMA Cumulative Rank Probability")
 
   
 # Convert the rank object to a data frame
 Base_rank_df <- as.data.frame(Base_case_rank)
 
+
+
 # 1. Create and store the plot object
 rank_plot <- plot(Base_case_rank) + 
   xlim(1, 47) +
   labs(x = "Rank", y = "Cumulative Probability") +
   theme_minimal()
+
+# # Save the plot as a PNG file
+# file_name <- "Cumulative_Rank_Probability.png"
+# ggsave(filename = file_name, plot = rank_plot, device = "png", width = 8, height = 10, units = "in", dpi = 300)
+
+# message(paste("Figure saved to:", getwd(), "/", file_name))
+
 
 # 2. Save the plot object (rank_plot) instead of the data frame
 file_name <- "Fig3_Cumulative_Rank_Probability.tif"
