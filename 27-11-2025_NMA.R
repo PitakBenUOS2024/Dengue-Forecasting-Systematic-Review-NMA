@@ -1,32 +1,33 @@
+library(here)
 library(data.table)
 library(multinma)
 library(ggplot2)
 
 
 ## Pitak's last sheet with rankings
-D <- fread("PME.csv")
+D <- fread(here("data/PME.csv"))
 
 
 ## number in each study
-D[,num:=.N,by=Identifier]
-D[,uniqueN(Identifier)]
-D[,range(num)]
-D[,unique(`Rank within study`)]
-D[,occurs:=1]
+D[, num := .N, by = Identifier]
+D[, uniqueN(Identifier)]
+D[, range(num)]
+D[, unique(`Rank within study`)]
+D[, occurs := 1]
 
 
 ## =============== visualization
 
 
 ## trying Categories
-DM_Category <- set_agd_arm( 
-  data= D[num>1 & !is.na(`Rank within study`) & !is.na(Category)],
+DM_Category <- set_agd_arm(
+  data = D[num > 1 & !is.na(`Rank within study`) & !is.na(Category)],
   study = Identifier,
   trt = Category,
-  r=num,
+  r = num,
   E = `Rank within study`,
-  sample_size=occurs)
-
+  sample_size = occurs
+)
 
 print(DM_Category)
 
@@ -39,40 +40,47 @@ p$layers[[3]]$aes_params$size <- 5
 # 3. Increase Node Size and Move Legend
 p <- p +
   scale_size_continuous(range = c(8, 22)) +
-  theme(legend.position = "bottom",
-        legend.box = "vertical") +
+  theme(
+    legend.position = "bottom",
+    legend.box = "vertical"
+  ) +
   scale_x_continuous(expand = expansion(mult = 0.2)) +
   # --- ADD THIS LINE TO RENAME THE LEGEND ---
   labs(size = "Number of comparisons") # 'size' refers to the node size aesthetic
 
-D[,sum(occurs),by=Category] #NOTE I think these are the numbers for the sizes
+
+D[, sum(occurs), by = Category] # NOTE I think these are the numbers for the sizes
+
 
 # 4. Print to check
 print(p)
 
 # Save the plot object 'p' to a file
 ggsave(
-  filename = "network_plot_w_number_of_comparisons.png", 
-  plot = p, 
-  width = 9.4,       # Width of the image
-  height = 8,       # Height of the image
-  units = "in",     # Units for width/height
-  dpi = 300         # Resolution (300 is print quality)
+  filename = "network_plot_w_number_of_comparisons.png",
+  plot = p,
+  width = 9.4, # Width of the image
+  height = 8, # Height of the image
+  units = "in", # Units for width/height
+  dpi = 300 # Resolution (300 is print quality)
 )
 
-  # Define the file name
-  file_name <- "Fig2_NMA_Network_analysis_Diagram.tif"
-  
-  # Save the plot with PLOS-compliant settings
-  ggsave(
-    filename = file_name, 
-    plot = p, 
-    device = "tiff", 
-    dpi = 300,            # Required minimum resolution
-    width = 7.5,          # Standard width for a full-page width figure (inches)
-    height = 8,           # Adjust based on the number of models in your list
-    units = "in", 
-    compression = "lzw"   # Reduces file size without losing quality
-  )
-  
-  message(paste("Figure saved to:", getwd(), "/", file_name))
+
+## Define the file name
+file_name <- here("NMA_FIGs/Fig2_NMA_Network_analysis_Diagram.tif")
+
+## Save the plot with PLOS-compliant settings
+ggsave(
+  filename = file_name,
+  plot = p,
+  device = "tiff",
+  dpi = 300, # Required minimum resolution
+  width = 7.5, # Standard width for a full-page width figure (inches)
+  height = 8, # Adjust based on the number of models in your list
+  units = "in",
+  compression = "lzw" # Reduces file size without losing quality
+)
+
+
+message(paste("Figure saved to:", getwd(), "/", file_name))
+
