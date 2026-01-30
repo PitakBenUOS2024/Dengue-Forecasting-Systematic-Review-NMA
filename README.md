@@ -12,7 +12,7 @@ TODO: suggest renaming the files that are still used, with a prefix that gives p
 - [ ] 14-07-2025_SA-NMA-example.R
 - [ ] 16-07-2025_NMA_Sub_group_by_time_horizon.R
 - [ ] 22-07-2025_NMA-by-RDS.R
-- [ ] 27-11-2025_NMA.R                                  (cleaned as example)
+- [x] 27-11-2025_NMA.R                                  (cleaned as example), move/rename -> scripts/network_setup_viz.R
 - [x] Example-of-NMA.R                                  -> DELETED
 
 ## Project Structure
