@@ -15,7 +15,9 @@ TODO: suggest renaming the files that are still used, with a prefix that gives p
 - [ ] 27-11-2025_NMA.R                                  (cleaned as example)
 - [x] Example-of-NMA.R                                  -> DELETED
 
-## Folder structure
+## Project Structure
+
+```text
 project-root/
 │
 ├── data-raw/          # Original, untouched CSVs/Excel files
@@ -26,13 +28,10 @@ project-root/
 │   ├── 01_clean.R
 │   ├── 02_run_model.R
 │   └── 03_plots.R
-├── .gitignore         # CRITICAL: Tell git to ignore large .html or .pdf files
-└── README.md          # Brief overview of the analysis
+├── .gitignore         # Prevents tracking of large files (e.g., .rds, .pdf)
+└── README.md          # Overview of the analysis and NMA specifications
+```
 
-## tip
-- Don't track .rds models: Bayesian models are massive. If your model file is >50MB, don't push it to GitHub. Instead, save the summary tables or use Git LFS (Large File Storage).
-
-- Use renv: Run renv::init() to capture the specific versions of multinma and rstan you are using. This ensures your code doesn't break for someone else 2 years from now.
 
 # Systematic_Review_Dengue_Forecasting
 
