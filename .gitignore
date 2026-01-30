@@ -1,24 +1,35 @@
-# mac users
+# --- R Specifics ---
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+.Rapp.history
+*-ex.R
+.Rpackages
+
+# --- Multinma / Stan Specifics ---
+# These prevent tracking of massive Bayesian model objects 
+# or temporary compiled C++ code.
+*.rds
+*.rds.tmp
+*.so
+*.dll
+*.o
+
+# --- Project Structure ---
+# Ignore the raw output folder if you prefer to only share code,
+# or ignore specific heavy sub-folders.
+output/models/
+output/plots/*.pdf
+output/plots/*.png
+
+# --- Documentation & Environment ---
+.Renviron
+.venv/
+renv/python/
+renv/staging/
+renv/library/
+
+# --- OS Specifics ---
 .DS_Store
 Thumbs.db
-
-# R session files
-.RData
-.Rhistory
-.Ruserdata
-
-# R packages and logs
-.Rproj.user/
-.Rproj.user
-.Rprofile
-.Rapp.history
-
-# Cache and temporary files
-*.Rout
-*.Rout.save
-*.Rhistory
-
-# Ignore all Excel files
-*.xlsx
-*.xls
-
