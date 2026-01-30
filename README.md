@@ -15,6 +15,8 @@ TODO: suggest renaming the files that are still used, with a prefix that gives p
 - [x] 27-11-2025_NMA.R                                  (cleaned as example), move/rename -> scripts/network_setup_viz.R
 - [x] Example-of-NMA.R                                  -> DELETED
 
+### EXAMPLE: https://github.com/petedodd/bmitb/tree/main
+
 ## Project Structure
 
 ```text
