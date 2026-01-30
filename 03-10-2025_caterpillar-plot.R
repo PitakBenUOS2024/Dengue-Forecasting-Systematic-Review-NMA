@@ -1,13 +1,11 @@
+## =====================
+library(here)
 library(data.table)
 library(multinma)
 library(ggplot2)
-library(readr)
 
-#On Mac os
-# setwd('/Volumes/HAR_WG/WG/UKSEA_VAXHUB/Systematic_Review_Dengue_Forecasting')
-setwd('/Users/pitakbenjarattanaporn/Documents/Projects/Systematic_Review_Dengue_Forecasting/data') #data folder on local machine
-
-smkfit <- readRDS("base_case_NMA_REFF_NAIVE.rds")
+# ================ load data
+smkfit <- readRDS(here("output/base_case_NMA_REFF_NAIVE.rds"))
 
 ####################
 

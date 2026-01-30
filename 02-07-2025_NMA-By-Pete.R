@@ -1,24 +1,13 @@
 # from email:https://mail.google.com/mail/u/0/#label/%E2%8F%B0READ+LATER+%7C+WAIT+TO+REPLY%E2%8F%B0/KtbxLwGrSMNSbPJCBDQMRRCPXbkhjMTMqq
 
 ## =====================
+library(here)
 library(data.table)
 library(multinma)
 library(ggplot2)
-library(readr)
 
-getwd()
-
-#On PC 
-# setwd('X:\\HAR_WG\\WG\\UKSEA_VAXHUB\\Systematic_Review_Dengue_Forecasting')
-
-#On Mac os
-# setwd('/Volumes/HAR_WG/WG/UKSEA_VAXHUB/Systematic_Review_Dengue_Forecasting')
-setwd('/Users/pitakbenjarattanaporn/Documents/Projects/Systematic_Review_Dengue_Forecasting/data') #data folder on local machine
-
-# --- 0. Set up some data ---
-
-## Pitak's last sheet with rankings
-D <- fread("PME.csv")
+# ================ load data
+D <- fread(here("data/PME.csv"))
 
 #creat RMSE_LOG10
 
@@ -71,7 +60,7 @@ smkfit <- nma(DM,
               iter = 4000 # Increase from default (often 2000) to 4000, 6000, or more
               )
 
-saveRDS(smkfit, file = "base_case_NMA.rds")
+# saveRDS(smkfit, file = "base_case_NMA.rds")
 
 ## relative effects
 smk_releff <- relative_effects(smkfit, all_contrasts = FALSE)

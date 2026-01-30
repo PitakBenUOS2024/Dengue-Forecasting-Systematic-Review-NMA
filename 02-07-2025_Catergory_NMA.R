@@ -1,15 +1,13 @@
 # from email:https://mail.google.com/mail/u/0/#label/%E2%8F%B0READ+LATER+%7C+WAIT+TO+REPLY%E2%8F%B0/KtbxLwGrSMNSbPJCBDQMRRCPXbkhjMTMqq
 
 ## =====================
+library(here)
 library(data.table)
 library(multinma)
+library(ggplot2)
 
-# getwd()
-# setwd('X:\\HAR_WG\\WG\\UKSEA_VAXHUB\\Systematic_Review_Dengue_Forecasting')
-setwd('/Users/pitakbenjarattanaporn/Documents/Projects/Systematic_Review_Dengue_Forecasting/data')
-
-## Pitak's last sheet with rankings
-D <- fread("PME.csv")
+# ================ load data
+D <- fread(here("data/PME.csv"))
 
 #creat RMSE_LOG10
 
