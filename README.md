@@ -5,8 +5,8 @@
 TODO: suggest renaming the files that are still used, with a prefix that gives people a sense of what order they should be run in. Then this document should explain briefly what each file does & also list the packages needed to run.
 
 - [ ] 02-07-2025_Catergory_NMA.R
-- [ ] 02-07-2025_NMA-By-Pete.R                           -> DELETED
-- [ ] 03-10-2025_caterpillar-plot.R
+- [ ] 02-07-2025_NMA-By-Pete.R                           -> Where is RE and Cumrankprobs are
+- [ ] 03-10-2025_caterpillar-plot.R                      -> Where .rds field is used. RE plot is polish here
 - [ ] 09-05-2025_NMA.R
 - [ ] 14-05-2025_RMSE-LOG_Plot.R
 - [ ] 14-07-2025_SA-NMA-example.R

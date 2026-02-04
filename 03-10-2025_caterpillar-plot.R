@@ -89,15 +89,20 @@ caterpillar_plot <- ggplot(smk_data, aes(x = Treatment, y = mean)) +
 
 # Print the plot
 print(caterpillar_plot)
-# ggsave("nma_caterpillar_plot_releff_RFF_Naive.png",w=10,h=10)
 
-
-# Define the file name
-file_name <- "Fig4_NMA_Caterpillar_Plot.tif"
+# Save the plot object 'p' to a file
+ggsave(
+  filename = here("output", "NMA_RE_Caterpillar_Plot.png"),
+  plot = caterpillar_plot,
+  width = 7.5, # Width of the image
+  height = 8, # Height of the image
+  units = "in", # Units for width/height
+  dpi = 300 # Resolution (300 is print quality)
+)
 
 # Save the plot with PLOS-compliant settings
 ggsave(
-  filename = file_name, 
+  filename = here("output", "NMA_RE_Caterpillar_Plot.tif"), 
   plot = caterpillar_plot, 
   device = "tiff", 
   dpi = 300,            # Required minimum resolution

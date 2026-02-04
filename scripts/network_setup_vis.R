@@ -15,7 +15,7 @@ D[, unique(`Rank within study`)]
 D[, occurs := 1]
 
 
-# =============== visualization
+# =============== visualisation NMA Diagram
 ## trying Categories
 DM_Category <- set_agd_arm(
   data = D[num > 1 & !is.na(`Rank within study`) & !is.na(Category)],
@@ -43,10 +43,10 @@ p <- p +
   ) +
   scale_x_continuous(expand = expansion(mult = 0.2)) +
   # --- ADD THIS LINE TO RENAME THE LEGEND ---
-  labs(size = "Number of comparisons") # 'size' refers to the node size aesthetic
+  labs(size = "Number of comparisons") # 'size' refers to the node size aesthetic # nolint
 
 
-D[, sum(occurs), by = Category] # NOTE I think these are the numbers for the sizes
+D[, sum(occurs), by = Category] # NOTE I think these are the numbers for the sizes # nolint
 
 
 # 4. Print to check
