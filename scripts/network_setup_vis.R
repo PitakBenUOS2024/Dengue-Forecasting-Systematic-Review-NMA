@@ -17,6 +17,7 @@ D[, occurs := 1]
 
 # =============== visualisation NMA Diagram
 ## trying Categories
+
 DM_Category <- set_agd_arm(
   data = D[num > 1 & !is.na(`Rank within study`) & !is.na(Category)],
   study = Identifier,

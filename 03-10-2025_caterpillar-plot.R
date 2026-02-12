@@ -5,7 +5,7 @@ library(multinma)
 library(ggplot2)
 
 # ================ load data
-smkfit <- readRDS(here("output/base_case_NMA_REFF_NAIVE.rds"))
+smkfit <- readRDS(here("output/NMA_REFF_NAIVE.rds"))
 
 ####################
 
@@ -15,8 +15,8 @@ smk_releff
 # This will display the DIC in your console
 dic(smkfit)
 
-plot(smk_releff, ref_line = 0) +
-  labs(title = "Base Case NMA Relative Effect")
+# plot(smk_releff, ref_line = 0) +
+#   labs(title = "Base Case NMA Relative Effect")
 
 ####################
 
@@ -52,7 +52,7 @@ smk_data$Treatment <- gsub("Exponential Smoothing", "EM", smk_data$Treatment)
 smk_data$Treatment <- gsub("Gaussian Process \\(GP\\)", "GP", smk_data$Treatment)
 smk_data$Treatment <- gsub("DHR \\(Dynamic Harmonic Regression \\)", "DHR", smk_data$Treatment)
 smk_data$Treatment <- gsub("NBM \\(negative binomial regression model\\)", "NBM", smk_data$Treatment)
-# --- END: Insert the four modification lines here ---
+
 
 # Convert 'Treatment' to a factor with levels ordered by 'mean' (highest to )
 smk_data$Treatment <- factor(
@@ -90,6 +90,14 @@ caterpillar_plot <- ggplot(smk_data, aes(x = Treatment, y = mean)) +
 # Print the plot
 print(caterpillar_plot)
 
+# SUCRA Curves
+smk_cumrankprobs <- posterior_rank_probs(smkfit, lower_better = TRUE, cumulative = TRUE)
+smk_cumrankprobs
+plot(smk_cumrankprobs) + xlim(1, 47) +
+  labs(title = "Base Case NMA Cumulative Rank Probability")
+
+
+
 # Save the plot object 'p' to a file
 ggsave(
   filename = here("output", "NMA_RE_Caterpillar_Plot.png"),
@@ -112,4 +120,26 @@ ggsave(
   compression = "lzw"   # Reduces file size without losing quality
 )
 
-message(paste("Figure saved to:", getwd(), "/", file_name))
+ggsave(
+  filename = here("output", "NMA_SUCRACurve.tif"), 
+  plot = smk_cumrankprobs,
+  dpi = 300,            # Required minimum resolution
+  plot = p,
+  width = 9.4, # Width of the image
+  height = 8, # Height of the image
+  units = "in", # Units for width/height
+  dpi = 300 # Resolution (300 is print quality)
+)
+
+## Save the plot with Journal-compliant settings
+ggsave(
+  filename = here("output", "NMA_SUCRACurve.tif")
+  plot = smk_cumrankprobs, 
+  device = "tiff", 
+  dpi = 300,            # Required minimum resolution
+  width = 7.5,          # Standard width for a full-page width figure (inches)
+  height = 8,           # Adjust based on the number of models in your list
+  units = "in", 
+  compression = "lzw"   # Reduces file size without losing quality
+)
+

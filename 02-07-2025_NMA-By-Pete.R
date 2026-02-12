@@ -1,12 +1,9 @@
-# from email:https://mail.google.com/mail/u/0/#label/%E2%8F%B0READ+LATER+%7C+WAIT+TO+REPLY%E2%8F%B0/KtbxLwGrSMNSbPJCBDQMRRCPXbkhjMTMqq
-
-## =====================
 library(here)
 library(data.table)
 library(multinma)
 library(ggplot2)
 
-# ================ load data
+# ================ load data ================ 
 D <- fread(here("data/PME.csv"))
 
 #creat RMSE_LOG10
@@ -41,7 +38,7 @@ DM <- set_agd_arm( data= DR,
                    trt = method,
                    y=err,
                    se=err/10,
-                   trt_ref = "Naïve" # <<< THIS IS REFERENCE MODEL. ARIMA beacause it's Most Basic Model
+                   trt_ref = "Naïve" # <<< THIS IS REFERENCE MODEL.
 )
 
 print(DM)
@@ -50,9 +47,9 @@ plot(DM)
 
 
 
-# --- 1. Base Case NMA Setup ---
+# ==================== NMA Setup =============================# 
 # Take sometimes to run (e.g., 30 min)
-smkfit <- nma(DM,
+nma_fit <- nma(DM,
               trt_effects = "random",
               prior_intercept = normal(scale = 100),
               prior_trt = normal(scale = 100),
@@ -60,36 +57,118 @@ smkfit <- nma(DM,
               iter = 4000 # Increase from default (often 2000) to 4000, 6000, or more
               )
 
-# saveRDS(smkfit, file = "base_case_NMA.rds")
 
-## relative effects
-smk_releff <- relative_effects(smkfit, all_contrasts = FALSE)
-smk_releff
-plot(smk_releff, ref_line = 0)+
-  labs(title = "Base Case NMA Relative Effect")
-# ggsave("nma_releff.pdf",w=10,h=15)
+# saveRDS(nma_fit, file = here("output", "models", "NMA_REFF_NAIVE.rds"))
 
-## rank visualizations
- 
-# smk_rankprobs <- posterior_rank_probs(smkfit, lower_better = TRUE)
-# smk_rankprobs 
-# plot(smk_rankprobs) + xlim(1, 47)#Adjust Rank
-# # ggsave("nma_rnkprb.pdf",w=10,h=10)
+# Read the file from the nested folder
+# nma_fit <- readRDS(here("output", "models", "NMA_REFF_NAIVE.rds"))
+print(nma_fit)
 
+# ==================== Relative Effects Value =============================
+nma_releff <- relative_effects(nma_fit, all_contrasts = FALSE)
+print(nma_releff)
 
-smk_cumrankprobs <- posterior_rank_probs(smkfit, lower_better = TRUE, cumulative = TRUE)
-smk_cumrankprobs
-plot(smk_cumrankprobs) + xlim(1, 47) +
-  labs(title = "Base Case NMA Cumulative Rank Probability")
-# ggsave("nma_crnkprb.png",w=10,h=10)
+# This will display the DIC in your console
+dic(nma_fit)
 
-# Define the file name
-file_name <- "FigC1_NMA_crnkprb.tif"
+# Convert the multinma relative effects object to a data frame
+nma_re_df <- as.data.frame(nma_releff)
 
-# Save the plot with PLOS-compliant settings
+# Add a 'Treatment' column by extracting the treatment names from the row names
+nma_re_df$Treatment <- nma_re_df$parameter
+
+# Extract the clean treatment name (removing "d[" and "]") for better labels
+nma_re_df$Treatment <- gsub("^d\\[|\\]$", "", nma_re_df$Treatment)
+
+# Replace full names with abbreviations
+nma_re_df$Treatment <- gsub("Exponential Smoothing", "EM", nma_re_df$Treatment)
+nma_re_df$Treatment <- gsub("Gaussian Process \\(GP\\)", "GP", nma_re_df$Treatment)
+nma_re_df$Treatment <- gsub("DHR \\(Dynamic Harmonic Regression \\)", "DHR", nma_re_df$Treatment)
+nma_re_df$Treatment <- gsub("NBM \\(negative binomial regression model\\)", "NBM", nma_re_df$Treatment)
+
+# Convert 'Treatment' to a factor with levels ordered by 'mean' (Lowest to hightest )
+nma_re_df$Treatment <- factor(nma_re_df$Treatment, levels = nma_re_df$Treatment[order(nma_re_df$mean, decreasing = TRUE)])
+
+# Create the caterpillar plot using ggplot2
+caterpillar_plot <- ggplot(nma_re_df, aes(x = Treatment, y = mean)) +
+  # Add the 95% Credible Interval (2.5% to 97.5%)
+  geom_errorbar(aes(ymin = `2.5%`, ymax = `97.5%`), width = 0.1, color = "darkgrey") +
+  # Add the 50% Credible Interval (25% to 75%)
+  geom_errorbar(aes(ymin = `25%`, ymax = `75%`), width = 0.2, linewidth = 1, color = "blue") +
+  # Add the mean estimates (the "head" of the caterpillar)
+  geom_point(size = 2.5, color = "blue") +
+  # Add a vertical reference line at 0 (null effect)
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  # Flip the coordinates so the treatment names are on the y-axis (horizontal plot)
+  coord_flip() +
+  # Set informative labels and title
+  labs(
+  #  title = "Relative Effects",
+    x = "Forecating Model",
+    y = "Relative Effect"
+  ) +
+  # Apply a clean theme
+  theme_minimal() +
+  # Adjust the treatment labels position for better readability
+  theme(
+    axis.text.y = element_text(size = 8),
+    plot.title = element_text(hjust = 0.5)
+  )
+
+# Print the plot
+print(caterpillar_plot)
+
+# ================ Plot =============================
+
 ggsave(
-  filename = file_name, 
-  plot = smk_cumrankprobs, 
+  filename = here("output", "RE_Caterpillar_Plot.png"),
+  plot = caterpillar_plot,
+  width = 7.5, # Width of the image
+  height = 8, # Height of the image
+  units = "in", # Units for width/height
+  dpi = 300 # Resolution (300 is print quality)
+)
+
+# Save the plot with Journal-compliant settings
+ggsave(
+  filename = here("output", "RE_Caterpillar_Plot.tif"), 
+  plot = caterpillar_plot, 
+  device = "tiff", 
+  dpi = 300,            # Required minimum resolution
+  width = 7.5,          # Standard width for a full-page width figure (inches)
+  height = 8,           # Adjust based on the number of models in your list
+  units = "in", 
+  compression = "lzw"   # Reduces file size without losing quality
+
+
+
+## ==================== Cumulative Rank Probability & SUCRA Curves =============================
+ 
+nma_ranks <- posterior_rank_probs(nma_fit, lower_better = TRUE)
+nma_ranks 
+plot(nma_ranks) + xlim(1, 47)
+
+# SUCRA Curves
+nma_sucra <- posterior_rank_probs(nma_fit, lower_better = TRUE, cumulative = TRUE)
+nma_sucra
+plot(nma_sucra) + xlim(1, 47) +
+  labs(title = "Cumulative Rank Probability")
+
+# ================ Plot =============================
+
+ggsave(
+  filename = here("output","cumulative_rank_probability.png"),
+  plot = plot(nma_sucra) + xlim(1, 47), # Call the plot function here
+  dpi = 300,            # Required minimum resolution
+  width = 7.5,          # Standard width for a full-page width figure (inches)
+  height = 8,           # Adjust based on the number of models in your list
+  units = "in", 
+  compression = "lzw"   # Reduces file size without losing quality
+
+# Save the plot with Journal-compliant settings
+ggsave(
+  filename = here("output","cumulative_rank_probability.tif"),
+  plot = plot(nma_sucra) + xlim(1, 47), # Call the plot function here
   device = "tiff", 
   dpi = 300,            # Required minimum resolution
   width = 7.5,          # Standard width for a full-page width figure (inches)
@@ -98,78 +177,9 @@ ggsave(
   compression = "lzw"   # Reduces file size without losing quality
 )
 
-message(paste("Figure saved to:", getwd(), "/", file_name))
 
 
-# Sensitivity Analysis 
-
-# --- 2.Filter out Low QA studies Setup ---
-
-# Filter out Low and Medium quality (n=24)
-L_n_M_rmv <- c("Anggraeni, 2021", "Chakraborty, 2020", "Doni, 2020", "Jayashree, 2015", "Kerdprasop, 2020", "Mahdiana, 2017", "Nabilah, 2023", "Prome, 2024", "Shashvat, 2023", "Guo, 2018", "Ho, 2015", "Juraphanthong, 2021", "Khaira, 2020", "Ligue, 2022", "Liu, 2019", "Mustaffa, 2024", "Othman, 2022", "Pham, 2018", "Rajendran, 2023", "Shashvat, 2019", "Tian, 2024", "Weng, 2024", "Zhao, 2020", "Rangarajan, 2019") #single arm
-my_data_no_l_n_m_study <- DR[!Identifier %in% L_n_M_rmv]
-
-net_high_Q_studies <- set_agd_arm( data= my_data_no_l_n_m_study,
-                   study = Identifier,
-                   trt = method,
-                   y=err,
-                   se=err/10,
-                   trt_ref = "ARIMA" # <<< THIS IS REFERENCE MODEL. Naïve beacause it's Most Basic Model
-)
-
-print("--- Network excluding Low and Medium qulity studies ---")
-print(net_high_Q_studies)
-plot(net_high_Q_studies)
 
 
-fit_high_Q_studies <- nma(net_high_Q_studies,
-                            trt_effects = "random",
-                            prior_intercept = normal(scale = 100),
-                            prior_trt = normal(scale = 100),
-                            prior_het = normal(scale = 5),
-                            iter = 4000 # Increase from default (often 2000) to 4000, 6000, or more
-)
 
 
-saveRDS(fit_high_Q_studies, file = "high_quality_case_NMA.rds")
-
-
-# Compare results
-print("--- Results without Low and Medium qulity studies ---")
-print(relative_effects(fit_high_Q_studies))
-plot(relative_effects(fit_high_Q_studies), ref_line = 0)+
-  labs(title = "High quality studies NMA Relative Effect")
-
-
-print("--- SUCRA Ranks without Low and Medium qulity studies ---")
-print(posterior_rank_probs(fit_high_Q_studies, lower_better = TRUE, cumulative = TRUE))
-plot(posterior_rank_probs(fit_high_Q_studies, lower_better = TRUE, cumulative = TRUE)) + xlim(1, 39)+
-  labs(title = "High quality studies NMA Cumulative Rank Probability")
-
-
-# --- 3.Fixed Effects Setup ---
-
-fit_fixed <- nma(DM,
-                 trt_effects = "fixed",
-                 prior_intercept = normal(scale = 100),
-                 prior_trt = normal(scale = 100),
-                 prior_het = normal(scale = 5),
-                 iter = 4000 # Increase from default (often 2000) to 4000, 6000, or more
-)
-
-saveRDS(fit_fixed, file = "fixed_effect_case_NMA.rds")
-
-
-print("--- Fixed Effects Model Results ---")
-print(relative_effects(fit_fixed))
-plot(relative_effects(fit_fixed), ref_line = 0)+
-  labs(title = "Fixed Effect studies NMA Relative Effect")
-
-# print("--- Fixed Effects SUCRA Ranks ---")
-# print(posterior_rank_probs(fit_fixed))
-# plot(posterior_rank_probs(fit_fixed, lower_better = TRUE))
-
-print("--- Fixed Effects Cumulative Ranks ---")
-print(posterior_rank_probs(fit_fixed), cumulative = TRUE)
-plot(posterior_rank_probs(fit_fixed, lower_better = TRUE, cumulative = TRUE)) + xlim(1, 47)+
-  labs(title = "Fixed Effect studies NMA Cumulative Rank Probability")
