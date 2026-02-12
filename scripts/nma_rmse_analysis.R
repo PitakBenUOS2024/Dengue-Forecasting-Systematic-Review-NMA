@@ -139,7 +139,7 @@ ggsave(
   height = 8,           # Adjust based on the number of models in your list
   units = "in", 
   compression = "lzw"   # Reduces file size without losing quality
-
+)
 
 
 ## ==================== Cumulative Rank Probability & SUCRA Curves =============================
@@ -164,7 +164,7 @@ ggsave(
   width = 7.5,          # Standard width for a full-page width figure (inches)
   height = 8,           # Adjust based on the number of models in your list
   units = "in", 
-  compression = "lzw"   # Reduces file size without losing quality
+)
 
 # Save the plot with Journal-compliant settings
 ggsave(

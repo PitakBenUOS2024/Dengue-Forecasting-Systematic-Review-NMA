@@ -16,7 +16,6 @@ D[, occurs := 1]
 
 
 # =============== visualisation NMA Diagram
-## trying Categories
 
 DM_Category <- set_agd_arm(
   data = D[num > 1 & !is.na(`Rank within study`) & !is.na(Category)],
@@ -75,7 +74,5 @@ ggsave(
   compression = "lzw" # Reduces file size without losing quality
 )
 
-
-message(paste("Figure saved to:", file_name))
 
 

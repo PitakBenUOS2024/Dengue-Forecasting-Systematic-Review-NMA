@@ -4,18 +4,20 @@
 
 TODO: suggest renaming the files that are still used, with a prefix that gives people a sense of what order they should be run in. Then this document should explain briefly what each file does & also list the packages needed to run.
 
-- [ ] 02-07-2025_Catergory_NMA.R
+- [x] 02-07-2025_Catergory_NMA.R *Deleted*
 - [x] 02-07-2025_NMA-By-Pete.R (renamed:nma_rmse_analysis)                          -> Where is RE and Cumrankprobs are. now add .RDS function
-- [x] 03-10-2025_caterpillar-plot.R                      -> Merge the bloat function into " 02-07-2025_NMA-By-Pete.R  "
-- [ ] 09-05-2025_NMA.R
-- [ ] 14-05-2025_RMSE-LOG_Plot.R
-- [ ] 14-07-2025_SA-NMA-example.R
-- [ ] 16-07-2025_NMA_Sub_group_by_time_horizon.R
-- [ ] 22-07-2025_NMA-by-RDS.R
+- [x] 03-10-2025_caterpillar-plot.R *Deleted*                      -> Merge the bloat function into " 02-07-2025_NMA-By-Pete.R  "
+- [x] 09-05-2025_NMA.R *Deleted*
+- [x] 14-05-2025_RMSE-LOG_Plot.R *Deleted*
+- [x] 14-07-2025_SA-NMA-example.R *Deleted*
+- [x] 16-07-2025_NMA_Sub_group_by_time_horizon.R *Deleted*
+- [x] 22-07-2025_NMA-by-RDS.R *Deleted*
 - [x] 27-11-2025_NMA.R (renamed: network_setup_viz.R)                                 (cleaned as example), move/rename -> scripts/network_setup_viz.R
 - [x] Example-of-NMA.R                                  -> DELETED
-- [ ] colab Python
-
+- [x] colab Python
+- Data
+    - [ ] PME
+    _ [ ] covar and Model
 
 
 
