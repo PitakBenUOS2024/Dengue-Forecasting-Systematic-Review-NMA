@@ -54,7 +54,7 @@ print(p)
 
 # Save the plot object 'p' to a file
 ggsave(
-  filename = here("output", "network_diagram_with_number_of_comparisons.png"),
+  filename = here("output", "figures", "network_diagram_with_number_of_comparisons.png"),
   plot = p,
   width = 9.4, # Width of the image
   height = 8, # Height of the image
@@ -64,7 +64,7 @@ ggsave(
 
 ## Save the plot with Journal-compliant settings
 ggsave(
-  filename = here("output/network_diagram_with_number_of_comparisons.tif"),
+  filename = here("output", "figures", "network_diagram_with_number_of_comparisons.tif"),
   plot = p,
   device = "tiff",
   dpi = 300, # Required minimum resolution
@@ -75,4 +75,24 @@ ggsave(
 )
 
 
+# ================== Exporting Network Diagram Data ==================
+# 1. Ensure the directory exists
+if (!dir.exists(here("output", "table"))) dir.create(here("output", "table"), recursive = TRUE)
 
+# 2. Save the arm-level data (The nodes and comparisons)
+# This is the processed data inside the DM_Category object
+fwrite(
+  as.data.frame(DM_Category$arm), 
+  here("output", "table", "network_arm_data.csv")
+)
+
+# 3. Save the specific Category counts (Used for node sizing)
+# This mimics your logic: D[, sum(occurs), by = Category]
+category_counts <- D[num > 1 & !is.na(`Rank within study`) & !is.na(Category), 
+                     .(Number_of_Comparisons = sum(occurs)), 
+                     by = Category]
+
+fwrite(
+  category_counts, 
+  here("output", "table", "network_node_sizes.csv")
+)

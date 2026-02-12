@@ -82,7 +82,7 @@ nma_re_df$Treatment <- gsub("^d\\[|\\]$", "", nma_re_df$Treatment)
 
 # Replace full names with abbreviations
 nma_re_df$Treatment <- gsub("Exponential Smoothing", "EM", nma_re_df$Treatment)
-nma_re_df$Treatment <- gsub("Gaussian Process \\(GP\\)", "GP", nma_re_df$Treatment)
+nma_re_df$Treatment <- gsub("Gaussian Process \\(GP\\)", "GP", nma_re_df$Treatment) # nolint
 nma_re_df$Treatment <- gsub("DHR \\(Dynamic Harmonic Regression \\)", "DHR", nma_re_df$Treatment)
 nma_re_df$Treatment <- gsub("NBM \\(negative binomial regression model\\)", "NBM", nma_re_df$Treatment)
 
@@ -121,7 +121,7 @@ print(caterpillar_plot)
 # ================ Plot =============================
 
 ggsave(
-  filename = here("output", "RE_Caterpillar_Plot.png"),
+  filename = here("output", "figures", "RE_Caterpillar_Plot.png"),
   plot = caterpillar_plot,
   width = 7.5, # Width of the image
   height = 8, # Height of the image
@@ -131,7 +131,7 @@ ggsave(
 
 # Save the plot with Journal-compliant settings
 ggsave(
-  filename = here("output", "RE_Caterpillar_Plot.tif"), 
+  filename = here("output", "figures", "RE_Caterpillar_Plot.tif"), 
   plot = caterpillar_plot, 
   device = "tiff", 
   dpi = 300,            # Required minimum resolution
@@ -158,7 +158,7 @@ plot(nma_sucra) + xlim(1, 47) +
 # ================ Plot =============================
 
 ggsave(
-  filename = here("output","cumulative_rank_probability.png"),
+  filename = here("output", "figures", "cumulative_rank_probability.png"),
   plot = plot(nma_sucra) + xlim(1, 47), # Call the plot function here
   dpi = 300,            # Required minimum resolution
   width = 7.5,          # Standard width for a full-page width figure (inches)
@@ -168,7 +168,7 @@ ggsave(
 
 # Save the plot with Journal-compliant settings
 ggsave(
-  filename = here("output","cumulative_rank_probability.tif"),
+  filename = here("output", "figures", "cumulative_rank_probability.tif"),
   plot = plot(nma_sucra) + xlim(1, 47), # Call the plot function here
   device = "tiff", 
   dpi = 300,            # Required minimum resolution
@@ -178,9 +178,26 @@ ggsave(
   compression = "lzw"   # Reduces file size without losing quality
 )
 
+# ==================== Exporting NMA Results to CSV ==================== 
+# Ensure the directory exists
+if (!dir.exists(here("output", "table"))) dir.create(here("output", "table"), recursive = TRUE)
 
+# 1. Save NMA Fit Summary (Parameter estimates, CI, Rhat)
+# We use summary() to get the table of results then convert to data frame
+nma_summary_df <- as.data.frame(summary(nma_fit))
+fwrite(nma_summary_df, here("output", "table", "nma_fit_summary.csv"))
 
+# 2. Save Relative Effects (The data used for your caterpillar plot)
+# You already created nma_re_df in your code; let's save that specific version
+fwrite(nma_re_df, here("output", "table", "nma_relative_effects.csv"))
 
+# 3. Save Rank Probabilities & SUCRA values
+# This extracts the probability of each treatment being at each rank
+nma_ranks_df <- as.data.frame(nma_ranks)
+fwrite(nma_ranks_df, here("output", "table", "nma_rank_probabilities.csv"))
 
+# 4. Save Cumulative Rank Probabilities (SUCRA Curves data)
+nma_sucra_df <- as.data.frame(nma_sucra)
+fwrite(nma_sucra_df, here("output", "table", "nma_sucra_cumulative.csv"))
 
 
