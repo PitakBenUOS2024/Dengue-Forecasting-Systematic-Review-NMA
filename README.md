@@ -15,9 +15,15 @@ TODO: suggest renaming the files that are still used, with a prefix that gives p
 - [x] 27-11-2025_NMA.R (renamed: network_setup_viz.R)                                 (cleaned as example), move/rename -> scripts/network_setup_viz.R
 - [x] ~~Example-of-NMA.R                                  -> DELETED~~
 - [x] ~~colab Python~~
-- Data
-    - [ ] PME
-    - [ ] covar and Model
+
+
+- ## Data
+    - [ ] PME 
+        - Renanme the columns
+        - use current PME.csv
+    - [ ] covar.xlsx and Model.xlsx
+        - convert to .csv?
+        - check number
 
 
 
@@ -28,20 +34,20 @@ TODO: suggest renaming the files that are still used, with a prefix that gives p
 ```text
 project-root/
 │
-├── data/              # Cleaned .CSV files (after preprocessing)
-├── R/                 # Helper functions
-│   ├── data_prep.R    # Functions for transforming long-to-wide format
-│   └── plotting_fx.R  # Specific code for NMA, SUCRA, and Heatmaps
+├── data/                       # Cleaned .CSV files (after preprocessing)
+├── R/                          # Helper functions
+│   ├── data_prep.R             # Functions for transforming long-to-wide format
+│   └── plotting_fx.R           # Specific code for NMA, SUCRA, and Heatmaps
 ├── output/            
-│   ├── models/        # Large .Rds objects of the fitted models
-│   ├── tables/        # CSVs of relative effects (OR/MD) and SUCRA ranks
-│   └── figures/       # The core visuals (NMA Diagrams, Forest Plots, SUCRA Curves,Heatmaps)
-├── scripts/           # The actual workflow
-│   ├── network_setup_vis.R # Network setup & analysis of the forecasting model categories.
-│   ├── nma_rmse_analysis.R # NMA Quantitative Synthesis 
-│   └── heatmap.R      # Heatmap of frequency of usage of specific Covariate Category and Model Type combinations across all studies
-├── .gitignore         # Prevents tracking of large files (e.g., .rds, .pdf)
-└── README.md          # Overview of the analysis and NMA specifications
+│   ├── models/                 # Large .Rds objects of the fitted models
+│   ├── tables/                 # CSVs of relative effects (OR/MD) and SUCRA ranks
+│   └── figures/                # The core visuals (NMA Diagrams, Forest Plots, SUCRA Curves,Heatmaps)
+├── scripts/                    # The actual workflow
+│   ├── network_setup_vis.R     # Network setup & analysis of the forecasting model categories.
+│   ├── nma_rmse_analysis.R     # NMA Quantitative Synthesis 
+│   └── heatmap.R               # Heatmap of frequency of usage of specific Covariate Category and Model Type combinations across all studies
+├── .gitignore                  # Prevents tracking of large files (e.g., .rds, .pdf)
+└── README.md                   # Overview of the analysis and NMA specifications
 ```
 
 
