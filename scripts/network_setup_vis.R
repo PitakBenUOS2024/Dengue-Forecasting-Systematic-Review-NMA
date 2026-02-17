@@ -5,7 +5,7 @@ library(ggplot2)
 
 
 # ================ load data
-D <- fread(here("data/PME.csv"))
+D <- fread(here("data/PME2.csv"))
 
 ## number in each study
 D[, num := .N, by = Identifier]
