@@ -1,60 +1,15 @@
-# TODO
+# Systematic Review: Dengue Forecasting Network Meta-Analysis
 
-## files
+## Abstract / Summary
+This repository contains the data and analytical code for a systematic review and Network Meta-Analysis (NMA) of Dengue forecasting models. The study evaluates the predictive performance of various model categories using Root Mean Square Error (RMSE) as the primary metric. By utilizing a Bayesian NMA framework, we compare diverse forecasting methodologies across different studies and identify which model types and covariate categories are most frequently and effectively employed.
 
-TODO: suggest renaming the files that are still used, with a prefix that gives people a sense of what order they should be run in. Then this document should explain briefly what each file does & also list the packages needed to run.
-
-- [x] ~~02-07-2025_Catergory_NMA.R~~
-- [x] 02-07-2025_NMA-By-Pete.R (renamed:nma_rmse_analysis)                          -> Where is RE and Cumrankprobs are. now add .RDS function 
-- [x]  ~~03-10-2025_caterpillar-plot.R  -> Merge the bloat function into " 02-07-2025_NMA-By-Pete.R  "~~
-- [x] ~~09-05-2025_NMA.R~~
-- [x] ~~14-05-2025_RMSE-LOG_Plot.R~~
-- [x] ~~14-07-2025_SA-NMA-example.R~~
-- [x] ~~16-07-2025_NMA_Sub_group_by_time_horizon.R~~
-- [x] ~~22-07-2025_NMA-by-RDS.R~~
-- [x] 27-11-2025_NMA.R (renamed: network_setup_viz.R)                                 (cleaned as example), move/rename -> scripts/network_setup_viz.R
-- [x] ~~Example-of-NMA.R                                  -> DELETED~~
-- [x] ~~colab Python~~
-
-
-- ## Data
-    - [ ] PME 
-        - Renanme the columns
-        - use current PME.csv
-    - [ ] covar.xlsx and Model.xlsx
-        - convert to .csv?
-        - check number
+---
 
 
 
-### EXAMPLE: https://github.com/petedodd/bmitb/tree/main
+## Installation & Requirements
 
-## Project Structure
-
-```text
-project-root/
-│
-├── data/                       # Cleaned .CSV files (after preprocessing)
-├── R/                          # Helper functions
-│   ├── data_prep.R             # Functions for transforming long-to-wide format
-│   └── plotting_fx.R           # Specific code for NMA, SUCRA, and Heatmaps
-├── output/            
-│   ├── models/                 # Large .Rds objects of the fitted models
-│   ├── tables/                 # CSVs of relative effects (OR/MD) and SUCRA ranks
-│   └── figures/                # The core visuals (NMA Diagrams, Forest Plots, SUCRA Curves,Heatmaps)
-├── scripts/                    # The actual workflow
-│   ├── network_setup_vis.R     # Network setup & analysis of the forecasting model categories.
-│   ├── nma_rmse_analysis.R     # NMA Quantitative Synthesis 
-│   └── heatmap.R               # Heatmap of frequency of usage of specific Covariate Category and Model Type combinations across all studies
-├── .gitignore                  # Prevents tracking of large files (e.g., .rds, .pdf)
-└── README.md                   # Overview of the analysis and NMA specifications
-```
-
-
-# Systematic_Review_Dengue_Forecasting
-
-## Software used in this analysis
-
+### Software
 This analysis used R veresion 4.4.1 and the following packages:
 
 
@@ -67,8 +22,67 @@ This analysis used R veresion 4.4.1 and the following packages:
 | readxl | 1.4.5 |
 | tidyverse |	2.0.0 |
 
+### Required R Packages
+You can install the necessary libraries using the following command:
 
-## Data used in this analysis 
+```R
+install.packages(c("multinma", "data.table", "ggplot2", "here", "readxl", "tidyverse"))
+```
 
-A single archive of the public input data to reproduce this analysis has been posted on Zenodo at [if it neeed -Pitak]:
-https://zenodo.org/xxx
+---
+
+## Project Structure
+
+```text
+Systematic_Review_Dengue_Forecasting/
+│
+├── data/                       # Input data files
+│   ├── PME.csv                 # Primary Performance Metric Extraction data
+│   ├── covar.xlsx              # Covariate category data
+│   └── model.xlsx              # Model type classification data
+│
+├── scripts/                    # Core analysis workflow
+│   ├── 01_network_setup_vis.R  # Network visualization & comparison analysis
+│   ├── 02_nma_rmse_analysis.R  # NMA Quantitative Synthesis (RMSE log-scale)
+│   └── 03_heatmap.R            # Model Type vs Covariate Category Heatmap
+│
+├── output/                     # Generated results (gitignored except for structure)
+│   ├── models/                 # Saved .Rds fitted model objects
+│   ├── tables/                 # CSVs of Relative Effects, SUCRA, and counts
+│   └── figures/                # PNG/TIFF exports (Caterpillar, SUCRA, Network)
+│
+├── .gitignore                  # Prevents tracking of large .Rds and .tiff files
+└── README.md                   # Project overview and instructions
+```
+---
+
+## Workflow: Execution Order
+
+To reproduce the analysis, run the scripts in the following order:
+
+1. **`scripts/01_network_setup_vis.R`**
+    * Prepares the network geometry and categories.
+    * Generates the **Network Diagram** and saves node size data to `output/table/`.
+2. **`scripts/02_nma_rmse_analysis.R`**
+    * Performs data cleaning, including $log_{10}$ transformation of RMSE.
+    * Fits the **Bayesian NMA model** (Note: This may take 30+ minutes).
+    * Generates **Caterpillar Plots**, **SUCRA Curves**, and exports relative effect tables.
+3. **`scripts/03_heatmap.R`**
+    * Merges model types with covariate data (Climate, Socio-economic, etc.).
+    * Produces the **Model vs. Covariate Heatmap** to visualize research trends.
+
+---
+
+## Data Sources
+
+* **`PME.csv`**: Primary Performance Metric Extraction data.
+* **`covar.xlsx` / `model.xlsx`**: Categorical data for secondary heatmap analysis.
+* **Zenodo**: A public archive of the input data is available at: [https://zenodo.org/xxx](https://zenodo.org/xxx).
+
+---
+
+## Citation
+
+If you use this code or data in your research, please cite:
+
+> Pitak Benjarattanaporn, Debebe Shaweno Adewo, Anthea Sutton, Andrew Lee, and Pete J. Dodd. (2026). **Dengue Forecasting Models: A Systematic Review Incorporating a Network Meta-Analysis and Comparative Analysis of Methodologies.** *medRxiv*. doi: [https://doi.org/10.64898/2026.02.18.26346534](https://doi.org/10.64898/2026.02.18.26346534)
