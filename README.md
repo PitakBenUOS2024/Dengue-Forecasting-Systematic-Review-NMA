@@ -71,13 +71,14 @@ To reproduce the analysis, run the scripts in the following order:
 
 3. **`scripts/03_heatmap.R`**
     * Merges model types with covariate data (Climate, Socio-economic, etc.).
-    * Produces the **Model vs. Covariate Heatmap** to visualize research trends.
+    * Produces the **Model vs. Covariate Heatmap** to visualise research trends.
 ---
 
 ## Data Sources
 
 * **`PME.csv`**: Primary Performance Metric Extraction data.
 * **`covar.xlsx` / `model.xlsx`**: Categorical data for secondary heatmap analysis.
+* **Zenodo**: A public archive of the input data is available at: [https://zenodo.org/xxx](https://zenodo.org/records/18770598).
 
 ---
 
