@@ -1,0 +1,27 @@
+Data Category,Model Type,Count
+Demographic,Deep Learning,55
+Demographic,Ensemble,54
+Demographic,Hybrid,18
+Demographic,Machine Learning,361
+Demographic,Time Series,30
+Entomological,Hybrid,18
+Entomological,Machine Learning,19
+Entomological,Time Series,19
+Geospatial data,Deep Learning,124
+Geospatial data,Ensemble,56
+Geospatial data,Hybrid,1
+Geospatial data,Machine Learning,917
+Geospatial data,Time Series,5
+Internet Data,Deep Learning,32
+Internet Data,Ensemble,5
+Internet Data,Hybrid,5
+Internet Data,Machine Learning,235
+Internet Data,Time Series,78
+Meteorological,Deep Learning,1164
+Meteorological,Ensemble,170
+Meteorological,Hybrid,394
+Meteorological,Machine Learning,2727
+Meteorological,Time Series,756
+Socio-economic data,Deep Learning,27
+Socio-economic data,Ensemble,27
+Socio-economic data,Machine Learning,78
