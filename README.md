@@ -78,7 +78,7 @@ To reproduce the analysis, run the scripts in the following order:
 
 * **`PME.csv`**: Primary Performance Metric Extraction data.
 * **`covar.xlsx` / `model.xlsx`**: Categorical data for secondary heatmap analysis.
-* **Zenodo**: A public archive of the input data is available at: [https://zenodo.org/xxx](https://zenodo.org/records/18770598).
+* **Zenodo**: A public archive of the input data is available at: [https://zenodo.org/records/18770598](https://zenodo.org/records/18770598).
 
 ---
 
