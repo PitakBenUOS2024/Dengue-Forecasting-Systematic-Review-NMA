@@ -1,4 +1,4 @@
-# Systematic Review: Dengue Forecasting Network Meta-Analysis
+# Dengue Forecasting Models: A Systematic Review  and Network Meta-Analysis of Relative  Performance
 
 ## Abstract / Summary
 This repository contains the data and analytical code for a systematic review and Network Meta-Analysis (NMA) of Dengue forecasting models. The study evaluates the predictive performance of various model categories using Root Mean Square Error (RMSE) as the primary metric. By utilizing a Bayesian NMA framework, we compare diverse forecasting methodologies across different studies and identify which model types and covariate categories are most frequently and effectively employed.
